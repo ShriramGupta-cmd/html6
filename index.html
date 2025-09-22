@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Database Recovery Techniques - BlueNova Blog</title>
+  <link href="https://prepbytes-misc-images.s3.ap-south-1.amazonaws.com/assets/1706596825931-Database%20Recovery%20Techniques.png">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(ellipse at top, #000 20%, #0a0a0a);
+      color: #00ffff;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      padding: 80px 20px 40px;
+      background: #000;
+    }
+
+    header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3.5rem;
+      color: #00ffff;
+      text-shadow: 0 0 10px #00ffff, 0 0 20px #00bcd4;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    header p {
+      font-size: 1.3rem;
+      color: #80deea;
+      margin-top: 15px;
+      letter-spacing: 1px;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 10px #00ffff, 0 0 20px #00bcd4;
+      }
+      to {
+        text-shadow: 0 0 20px #1de9b6, 0 0 40px #00e5ff;
+      }
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 40px auto;
+      background: #1a1a1a;
+      padding: 50px;
+      border-radius: 18px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+      position: relative;
+      z-index: 1;
+    }
+
+    .image-space {
+      text-align: center;
+      margin: 40px 0;
+      border: 2px dashed #00ffff;
+      padding: 30px;
+      background: #000;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.3s;
+      min-height: 200px; /* Ensures space even if no image is uploaded */
+    }
+
+    .image-space:hover {
+      background: #111;
+      box-shadow: 0 0 10px #00ffff;
+    }
+
+    .image-space img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #00ffff;
+      margin-top: 20px;
+    }
+
+    .image-space p {
+      font-style: italic;
+      font-size: 1rem;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      color: #00ffff;
+      margin-top: 40px;
+      text-shadow: 0 0 6px #18ffff;
+      border-left: 4px solid #00ffff;
+      padding-left: 15px;
+    }
+
+    p, li {
+      font-size: 1.1rem;
+      margin-top: 10px;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin-top: 10px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      margin-top: 60px;
+      background: #000;
+      color: #00ffff;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      border-top: 2px solid #00ffff;
+      box-shadow: 0 0 10px #00ffff;
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1s forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-delay-1 { animation-delay: 0.3s; }
+    .fade-delay-2 { animation-delay: 0.6s; }
+    .fade-delay-3 { animation-delay: 0.9s; }
+    .fade-delay-4 { animation-delay: 1.2s; }
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Database Recovery Techniques</h1>
+    <p class="fade-in fade-delay-1">Ensuring Consistency After Failures</p>
+  </header>
+
+  <div class="container fade-in fade-delay-2">
+
+    <div class="image-space fade-in fade-delay-3">
+      <!-- Replace the path with your image -->
+      <img src="https://prepbytes-misc-images.s3.ap-south-1.amazonaws.com/assets/1706596825931-Database%20Recovery%20Techniques.png" alt="Database Recovery Image">
+    </div>
+
+    <h2>Introduction</h2>
+    <p>
+      Database Recovery Techniques are essential for restoring database integrity after system crashes, power failures, or hardware malfunctions. These techniques ensure that data remains consistent and durable even when unexpected failures occur.
+    </p>
+
+    <h2>Why Recovery is Needed</h2>
+    <p>
+      Failures such as system crashes or transaction errors can corrupt a database. Recovery techniques help bring the database back to a stable state by undoing incomplete transactions and redoing completed ones.
+    </p>
+
+    <h2>Types of Failures</h2>
+    <ul>
+      <li><strong>Transaction Failure:</strong> A specific transaction fails due to logical errors or system crashes.</li>
+      <li><strong>System Crash:</strong> The database management system stops abruptly due to power or hardware issues.</li>
+      <li><strong>Disk Failure:</strong> Physical damage to the storage medium.</li>
+    </ul>
+
+    <h2>Recovery Techniques</h2>
+    <ul>
+      <li><strong>Log-Based Recovery:</strong> Maintains logs of all transactions. Uses Undo and Redo operations based on the log.</li>
+      <li><strong>Checkpointing:</strong> Periodically saves the current state of the database to reduce recovery time.</li>
+      <li><strong>Shadow Paging:</strong> Keeps a copy (shadow) of the database pages before modifying them.</li>
+    </ul>
+
+    <h2>Undo and Redo Operations</h2>
+    <ul>
+      <li><strong>Undo:</strong> Reverses the effects of a transaction that did not complete successfully.</li>
+      <li><strong>Redo:</strong> Reapplies the effects of a completed transaction to ensure durability.</li>
+    </ul>
+
+    <h2>Advantages</h2>
+    <ul>
+      <li>Maintains consistency and durability.</li>
+      <li>Quick recovery after crashes.</li>
+      <li>Log-based methods are reliable and efficient.</li>
+    </ul>
+
+    <h2>Conclusion</h2>
+    <p>
+      Database recovery techniques form the backbone of reliable database systems. By using logs, checkpoints, and undo/redo operations, they ensure that data is safe and recoverable even after critical failures.
+    </p>
+
+  </div>
+
+  <footer>
+    All Rights Reserved by Rajesh
+  </footer>
+
+</body>
+</html>
